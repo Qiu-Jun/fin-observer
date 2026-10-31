@@ -1,0 +1,28 @@
+:root {
+  --fin-bg: #f5f7fa;
+  --fin-accent: #2563eb;
+}
+
+html.dark {
+  --fin-bg: #0b1220;
+  --fin-accent: #3b82f6;
+}
+
+body {
+  margin: 0;
+  background: var(--fin-bg);
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.page-card {
+  margin-bottom: 16px;
+}
+
+.muted {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.trend-bullish { color: #e64340; }
+.trend-bearish { color: #2ba471; }
+/* A 股习惯：红涨绿跌 */

@@ -1,0 +1,21 @@
+{
+  "name": "fin-observer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "经济舆情监控平台：订阅股票/ETF → 关键字爬虫 → 结构化事件识别 → 相关度评分 → 资金走向与预测信号",
+  "scripts": {
+    "build:core": "pnpm --filter @fin/core build",
+    "build": "pnpm -r build",
+    "dev": "pnpm build:core && concurrently -n api,crawler,web -c blue,green,magenta \"pnpm --filter @fin/api start:dev\" \"pnpm --filter @fin/crawler start:dev\" \"pnpm --filter @fin/web dev\"",
+    "dev:server": "pnpm build:core && concurrently -n api,crawler -c blue,green \"pnpm --filter @fin/api start:dev\" \"pnpm --filter @fin/crawler start:dev\"",
+    "crawl:once": "tsx apps/crawler/src/scripts/crawl-once.ts",
+    "signals:once": "tsx apps/crawler/src/scripts/signals-once.ts"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.7",
+    "@nestjs/schematics": "^11.0.5",
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

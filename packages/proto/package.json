@@ -1,0 +1,6 @@
+{
+  "name": "@fin/proto",
+  "version": "0.1.0",
+  "private": true,
+  "description": "gRPC proto 契约（@grpc/proto-loader 运行时加载，无需 protoc）"
+}

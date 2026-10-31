@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package finobserver;
+
+// 控制面：api 应用作为客户端，crawler 应用作为服务端。
+// 数据面不经过 gRPC —— 两个服务共享同一 SQLite 文件。
+service CrawlerControl {
+  // 手动单跑某个爬虫
+  rpc RunCrawler (RunCrawlerRequest) returns (CrawlResultSummary);
+  // 手动跑全部启用的爬虫（串行）
+  rpc RunAllCrawlers (Empty) returns (RunAllSummary);
+  // 拉取爬虫实时状态（运行中/熔断/健康分，存于 crawler 进程内存）
+  rpc GetCrawlerStatuses (Empty) returns (CrawlerStatusList);
+  // 订阅生命周期事件：created → 回填 120 日资金流 + 即时关键字采集
+  //                 updated → 刷新关键词表; deleted → 保留历史，无需处理
+  rpc OnSubscriptionChanged (SubscriptionEvent) returns (Ack);
+  // 手动触发一次资金预测信号计算
+  rpc ComputeSignals (Empty) returns (Ack);
+}
+
+message Empty {}
+
+message RunCrawlerRequest {
+  string name = 1;
+}
+
+message CrawlResultSummary {
+  string source = 1;
+  int32 fetched = 2;
+  int32 added = 3;
+  bool success = 4;
+  string error = 5;
+  int32 durationMs = 6;
+}
+
+message RunAllSummary {
+  repeated CrawlResultSummary results = 1;
+}
+
+message CrawlerStatus {
+  string name = 1;
+  string sourceName = 2;
+  string sourceType = 3;
+  bool enabled = 4;
+  bool isRunning = 5;
+  bool lastSuccess = 6;
+  string lastError = 7;
+  string lastCrawlAt = 8;
+  string lastItemAt = 9;
+  int32 totalFetched = 10;
+  int32 consecutiveFailures = 11;
+  bool circuitOpen = 12;
+  int32 healthScore = 13;
+}
+
+message CrawlerStatusList {
+  repeated CrawlerStatus statuses = 1;
+}
+
+message SubscriptionEvent {
+  string action = 1;          // created | updated | deleted
+  string subscriptionId = 2;
+  string type = 3;            // stock | etf
+  string code = 4;
+  string name = 5;
+  string secid = 6;
+  string aliasesJson = 7;     // JSON 数组字符串
+}
+
+message Ack {
+  bool ok = 1;
+  string message = 2;
+}
