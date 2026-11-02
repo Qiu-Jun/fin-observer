@@ -61,7 +61,7 @@ const load = async () => {
   rows.value = await fundflowApi.summary();
   if (!selectedCode.value && rows.value.length > 0) {
     // 优先默认选中有资金流数据的订阅，避免打开页面就是空图表
-    selectedCode.value = (rows.value.find((r) => r.rowsCount > 0) ?? rows.value[0]).subscription.code;
+    selectedCode.value = (rows.value.find((r) => r.latest) ?? rows.value[0]).subscription.code;
   }
   if (selectedCode.value) await loadFlow();
   marketRows.value = await fundflowApi.market(30).catch(() => []);

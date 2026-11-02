@@ -9,7 +9,12 @@
     "dev": "pnpm build:core && concurrently -n api,crawler,web -c blue,green,magenta \"pnpm --filter @fin/api start:dev\" \"pnpm --filter @fin/crawler start:dev\" \"pnpm --filter @fin/web dev\"",
     "dev:server": "pnpm build:core && concurrently -n api,crawler -c blue,green \"pnpm --filter @fin/api start:dev\" \"pnpm --filter @fin/crawler start:dev\"",
     "crawl:once": "tsx apps/crawler/src/scripts/crawl-once.ts",
-    "signals:once": "tsx apps/crawler/src/scripts/signals-once.ts"
+    "signals:once": "tsx apps/crawler/src/scripts/signals-once.ts",
+    "pm2:start": "pnpm build && pm2 start ecosystem.config.js",
+    "pm2:restart": "pnpm build && pm2 restart ecosystem.config.js --update-env",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:logs": "pm2 logs",
+    "pm2:status": "pm2 status"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.7",
